@@ -17,6 +17,7 @@ from sklearn.metrics import (
     roc_curve, classification_report
 )
 import matplotlib.pyplot as plt
+import random
 
 # Safe import to avoid "float object not callable" error
 from sklearn.metrics import auc as sk_auc
@@ -156,9 +157,6 @@ plt.tight_layout()
 plt.show()
 
 # %% 4. LBP + SVM
-
-from sklearn.pipeline import Pipeline
-
 # -------------------------------------------------------------
 #  Function to load images from all subfolders and extract LBP
 # -------------------------------------------------------------
@@ -183,7 +181,8 @@ def load_images_and_extract_lbp(folder_path, label, max_images_per_folder=100):
                   if img.lower().endswith(('.jpg', '.jpeg', '.png'))]
 
         # ---------- QUICK MODE ----------
-        images = images[:max_images_per_folder]   # limit images for speed
+        if max_images_per_folder is not None and len(images) > max_images_per_folder:
+            images = random.sample(images, max_images_per_folder)   # limit images for speed
         # ---------- FULL DATASET MODE ----------
         # To use the full dataset later, just comment the line above ↑
 
@@ -345,8 +344,9 @@ def load_images_and_extract_dct(folder_path, label, max_images_per_folder=100):
         images = [img for img in os.listdir(sub_path)
                   if img.lower().endswith(('.jpg', '.jpeg', '.png'))]
 
-        # ✅ LIMIT IMAGES PER FOLDER (for speed)
-        images = images[:max_images_per_folder]
+        # ✅ LIMIT 100 random IMAGES PER FOLDER (for speed)
+        if max_images_per_folder is not None and len(images) > max_images_per_folder:
+            images = random.sample(images, max_images_per_folder)
         # ❗ FOR FULL DATASET — comment the above line and uncomment below
         # images = images  # use all images
 
@@ -489,7 +489,8 @@ def load_images_and_extract_lbp_dct(folder_path, label, max_images_per_folder=10
                   if img.lower().endswith(('.jpg', '.jpeg', '.png'))]
 
         # Limit per subfolder for speed
-        images = images[:max_images_per_folder]
+        if max_images_per_folder is not None and len(images) > max_images_per_folder:
+            images = random.sample(images, max_images_per_folder)
         #  For full dataset: comment above & uncomment below
         # images = images
 
@@ -637,7 +638,7 @@ for bar in bars:
     plt.text(
         bar.get_x() + bar.get_width()/2,
         height + 0.002,    # slight offset above bar
-        f"{height:.4f }",   # formatting accuracy value
+        f"{height:.4f}",   # formatting accuracy value
         ha='center',
         va='bottom',
         fontsize=10,
